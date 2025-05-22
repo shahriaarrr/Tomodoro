@@ -1,9 +1,9 @@
 # Miscellaneous
 *.class
-*.lock
 *.log
 *.pyc
 *.swp
+*.iml
 .buildlog/
 .history
 
