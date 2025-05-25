@@ -5,11 +5,18 @@ import 'dart:math';
 
 import 'package:tomodoro/providers/timer_provider.dart';
 
-class MyHomePage extends ConsumerWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends ConsumerState<MyHomePage> {
+  int currentPageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
     final timerState = ref.watch(TomodoroTimerProvider);
     final timerController = ref.read(TomodoroTimerProvider.notifier);
 
@@ -18,75 +25,102 @@ class MyHomePage extends ConsumerWidget {
 
     final progress =
         timerState.remaining.inSeconds /
-        (timerState.phase == TomodoroPhase.focus
-            ? 25 * 60
-            : 5 * 60); // adjust if needed
+        (timerState.phase == TomodoroPhase.focus ? 25 * 60 : 5 * 60);
+
+    final List<Widget> pages = [
+      _buildTimerPage(timerState, timerController, minutes, seconds, progress),
+      // const TaskPage(),
+    ];
 
     return Scaffold(
+      appBar: AppBar(title: Text(currentPageIndex == 0 ? "Tomodoro" : "Tasks")),
       backgroundColor: const Color(0xFF1E1E2C),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Tomodoro",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 156),
-              SizedBox(
-                width: 220,
-                height: 220,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CustomPaint(
-                      size: const Size(200, 200),
-                      painter: _CirclePainter(progress: progress),
-                    ),
-                    Text(
-                      '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 48,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: pages[currentPageIndex],
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: const Color(0xFF2A2A3E),
+        selectedIndex: currentPageIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.timer, color: Color(0xFF6C63FF)),
+            icon: Icon(Icons.timer_outlined, color: Colors.grey),
+            label: 'Timer',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.task_alt, color: Color(0xFF6C63FF)),
+            icon: Icon(Icons.task_alt_outlined, color: Colors.grey),
+            label: 'Tasks',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimerPage(
+    timerState,
+    timerController,
+    int minutes,
+    int seconds,
+    double progress,
+  ) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 90),
+            SizedBox(
+              width: 220,
+              height: 220,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  _TimerButton(
-                    text: timerState.isRunning ? 'Pause' : 'Start',
-                    color: const Color(0xFF6C63FF),
-                    onPressed:
-                        timerState.isRunning
-                            ? timerController.pause
-                            : timerController.start,
+                  CustomPaint(
+                    size: const Size(200, 200),
+                    painter: _CirclePainter(progress: progress),
                   ),
-                  const SizedBox(width: 20),
-                  _TimerButton(
-                    text: 'Reset',
-                    color: const Color(0xFFEF476F),
-                    onPressed: timerController.reset,
+                  Text(
+                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 48,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
-              Text(
-                "Current Phase: ${timerState.phase == TomodoroPhase.focus ? "Focus" : "Break"}",
-                style: const TextStyle(color: Colors.grey, fontSize: 18),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _TimerButton(
+                  text: timerState.isRunning ? 'Pause' : 'Start',
+                  color: const Color(0xFF6C63FF),
+                  onPressed:
+                      timerState.isRunning
+                          ? timerController.pause
+                          : timerController.start,
+                ),
+                const SizedBox(width: 20),
+                _TimerButton(
+                  text: 'Reset',
+                  color: const Color(0xFFEF476F),
+                  onPressed: timerController.reset,
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Text(
+              "Current Phase: ${timerState.phase == TomodoroPhase.focus ? "Focus" : "Break"}",
+              style: const TextStyle(color: Colors.grey, fontSize: 18),
+            ),
+          ],
         ),
       ),
     );
