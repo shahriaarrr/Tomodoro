@@ -102,7 +102,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 90),
+            const SizedBox(height: 50),
             SizedBox(
               width: 220,
               height: 220,

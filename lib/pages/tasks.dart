@@ -25,14 +25,21 @@ class TasksPage extends ConsumerWidget {
     final completed = tasks.where((t) => t.isDone).toList();
     final active = tasks.where((t) => !t.isDone).toList();
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF23232A),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Today',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: false,
       ),
@@ -44,18 +51,18 @@ class TasksPage extends ConsumerWidget {
             // Header
             Row(
               children: [
-                _InfoCard(title: "َAll Tasks", value: "${active.length}"),
+                _InfoCard(title: "All Tasks", value: "${active.length}"),
                 const SizedBox(width: 12),
                 _InfoCard(title: "Done", value: "${completed.length}"),
               ],
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "All Tasks",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 8),
@@ -79,10 +86,10 @@ class TasksPage extends ConsumerWidget {
                   ),
                   if (completed.isNotEmpty) ...[
                     const SizedBox(height: 18),
-                    const Text(
+                    Text(
                       "Completed",
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: isDark ? Colors.white70 : Colors.black54,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -108,6 +115,7 @@ class TasksPage extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6C63FF),
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -122,7 +130,7 @@ class TasksPage extends ConsumerWidget {
                       () => showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        backgroundColor: const Color(0xFF23232A),
+                        backgroundColor: theme.scaffoldBackgroundColor,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(24),
@@ -158,8 +166,11 @@ class _TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Card(
-      color: const Color(0xFF2D2D36),
+      color: theme.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
@@ -167,7 +178,7 @@ class _TaskTile extends StatelessWidget {
         title: Text(
           task.content,
           style: TextStyle(
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black,
             decoration: completed ? TextDecoration.lineThrough : null,
           ),
         ),
@@ -197,28 +208,34 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(top: 8),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF2D2D36),
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
-                color: Colors.white,
+                color: isDark ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               title,
-              style: const TextStyle(fontSize: 13, color: Colors.white70),
+              style: TextStyle(
+                fontSize: 13,
+                color: isDark ? Colors.white70 : Colors.black54,
+              ),
             ),
           ],
         ),
@@ -240,6 +257,9 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(
         left: 24,
@@ -251,23 +271,25 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "New Task",
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
           const SizedBox(height: 18),
           TextField(
             controller: _controller,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: isDark ? Colors.white : Colors.black),
             decoration: InputDecoration(
               hintText: "Task name",
-              hintStyle: const TextStyle(color: Colors.white54),
+              hintStyle: TextStyle(
+                color: isDark ? Colors.white54 : Colors.black54,
+              ),
               filled: true,
-              fillColor: const Color(0xFF2D2D36),
+              fillColor: theme.cardColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -275,7 +297,10 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
             ),
           ),
           const SizedBox(height: 18),
-          const Text("Task priority", style: TextStyle(color: Colors.white70)),
+          Text(
+            "Task priority",
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+          ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -307,7 +332,8 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
               width: 240,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6C63FF),
+                  backgroundColor: theme.primaryColor,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -345,6 +371,9 @@ class _PriorityChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: ClipRRect(
@@ -362,7 +391,10 @@ class _PriorityChip extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: selected ? color : const Color(0xFF23232A),
+            backgroundColor:
+                selected
+                    ? color
+                    : (isDark ? const Color(0xFF23232A) : Colors.grey[200]),
             shape: StadiumBorder(side: BorderSide(color: color, width: 1.5)),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           ),
