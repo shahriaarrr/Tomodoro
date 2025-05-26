@@ -14,8 +14,28 @@ class MyHomePage extends ConsumerStatefulWidget {
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage>
+    with SingleTickerProviderStateMixin {
   int currentPageIndex = 0;
+  late AnimationController _progressController;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(hours: 1),
+    )..addListener(() {
+      setState(() {});
+    });
+    _progressController.repeat();
+  }
+
+  @override
+  void dispose() {
+    _progressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +47,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final minutes = timerState.remaining.inMinutes.remainder(60);
     final seconds = timerState.remaining.inSeconds.remainder(60);
 
-    final progress =
-        timerState.remaining.inSeconds /
-        (timerState.phase == TomodoroPhase.focus ? 25 * 60 : 5 * 60);
+    final totalSeconds =
+        timerState.phase == TomodoroPhase.focus
+            ? timerController.focusMinutes * 60
+            : timerController.breakMinutes * 60;
+
+    final DateTime endTime = DateTime.now().add(timerState.remaining);
 
     final List<Widget> pages = [
       _buildTimerPage(
@@ -37,7 +60,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         timerController,
         minutes,
         seconds,
-        progress,
+        totalSeconds,
+        endTime,
         isDarkMode,
       ),
       const TasksPage(),
@@ -93,7 +117,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     timerController,
     int minutes,
     int seconds,
-    double progress,
+    int totalSeconds,
+    DateTime endTime,
     bool isDarkMode,
   ) {
     return SafeArea(
@@ -109,12 +134,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CustomPaint(
-                    size: const Size(200, 200),
-                    painter: _CirclePainter(
-                      progress: progress,
-                      isDarkMode: isDarkMode,
-                    ),
+                  AnimatedBuilder(
+                    animation: _progressController,
+                    builder: (context, child) {
+                      double progress = 0.0;
+                      if (totalSeconds > 0) {
+                        final now = DateTime.now();
+                        final remaining =
+                            endTime.difference(now).inMilliseconds / 1000.0;
+                        progress = remaining / totalSeconds;
+                        if (progress < 0) progress = 0;
+                        if (progress > 1) progress = 1;
+                      }
+                      return CustomPaint(
+                        size: const Size(200, 200),
+                        painter: _CirclePainter(
+                          progress: progress,
+                          isDarkMode: isDarkMode,
+                        ),
+                      );
+                    },
                   ),
                   Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',

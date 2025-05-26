@@ -17,7 +17,22 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
           phase: TomodoroPhase.focus,
         ),
       );
+
   Timer? _timer;
+
+  int focusMinutes = 25;
+  int breakMinutes = 5;
+
+  void setDurations({required int focus, required int breaks}) {
+    focusMinutes = focus;
+    breakMinutes = breaks;
+    // Reset timer to new durations if needed
+    state = state.copyWith(
+      remaining: _initialDuration(),
+      isRunning: false,
+      phase: state.phase,
+    );
+  }
 
   void start() {
     if (state.isRunning) return;
@@ -67,8 +82,8 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
     final currentphase = phase ?? state.phase;
 
     return currentphase == TomodoroPhase.focus
-        ? const Duration(minutes: 25)
-        : const Duration(minutes: 5);
+        ? Duration(minutes: focusMinutes)
+        : Duration(minutes: breakMinutes);
   }
 
   @override

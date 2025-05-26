@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/providers/theme_provider.dart';
+import 'package:tomodoro/providers/timer_provider.dart';
+import 'package:tomodoro/widgets/duration_picker_sheet.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -10,6 +12,7 @@ class SettingsPage extends ConsumerWidget {
     final currentTheme = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final timerController = ref.read(TomodoroTimerProvider.notifier);
 
     return Scaffold(
       body: SafeArea(
@@ -105,6 +108,87 @@ class SettingsPage extends ConsumerWidget {
                               isDarkMode ? Colors.grey[400] : Colors.grey[600],
                           inactiveTrackColor:
                               isDarkMode ? Colors.grey[700] : Colors.grey[300],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.timer_outlined,
+                          color: const Color(0xFF6C63FF),
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Timer Durations',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.grey[800],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Focus & Break',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      isDarkMode
+                                          ? Colors.white
+                                          : Colors.grey[800],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Set custom durations for focus and break',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      isDarkMode
+                                          ? Colors.grey[400]
+                                          : Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await showModalBottomSheet(
+                              context: context,
+                              builder:
+                                  (context) => DurationPickerSheet(
+                                    initialFocus: timerController.focusMinutes,
+                                    initialBreak: timerController.breakMinutes,
+                                    onConfirm: (focus, breaks) {
+                                      timerController.setDurations(
+                                        focus: focus,
+                                        breaks: breaks,
+                                      );
+                                    },
+                                  ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6C63FF),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Set'),
                         ),
                       ],
                     ),
