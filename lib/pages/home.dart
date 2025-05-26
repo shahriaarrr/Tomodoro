@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
+import 'package:tomodoro/pages/tasks.dart';
 import 'dart:math';
 
 import 'package:tomodoro/providers/timer_provider.dart';
@@ -29,7 +30,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     final List<Widget> pages = [
       _buildTimerPage(timerState, timerController, minutes, seconds, progress),
-      // const TaskPage(),
+      const TasksPage(),
     ];
 
     return Scaffold(
