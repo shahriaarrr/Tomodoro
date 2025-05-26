@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
 import 'package:tomodoro/pages/tasks.dart';
+import 'package:tomodoro/pages/settings.dart';
 import 'dart:math';
 
 import 'package:tomodoro/providers/timer_provider.dart';
@@ -21,6 +22,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final timerState = ref.watch(TomodoroTimerProvider);
     final timerController = ref.read(TomodoroTimerProvider.notifier);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final minutes = timerState.remaining.inMinutes.remainder(60);
     final seconds = timerState.remaining.inSeconds.remainder(60);
 
@@ -29,32 +32,56 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         (timerState.phase == TomodoroPhase.focus ? 25 * 60 : 5 * 60);
 
     final List<Widget> pages = [
-      _buildTimerPage(timerState, timerController, minutes, seconds, progress),
+      _buildTimerPage(
+        timerState,
+        timerController,
+        minutes,
+        seconds,
+        progress,
+        isDarkMode,
+      ),
       const TasksPage(),
+      const SettingsPage(),
     ];
 
+    final List<String> pageTitles = ["Tomodoro", "Tasks", "Settings"];
+
     return Scaffold(
-      appBar: AppBar(title: Text(currentPageIndex == 0 ? "Tomodoro" : "Tasks")),
-      backgroundColor: const Color(0xFF1E1E2C),
+      appBar: AppBar(title: Text(pageTitles[currentPageIndex])),
       body: pages[currentPageIndex],
       bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xFF2A2A3E),
+        backgroundColor:
+            isDarkMode ? const Color(0xFF2A2A3E) : Colors.grey[100],
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            selectedIcon: Icon(Icons.timer, color: Color(0xFF6C63FF)),
-            icon: Icon(Icons.timer_outlined, color: Colors.grey),
+            selectedIcon: Icon(Icons.timer, color: const Color(0xFF6C63FF)),
+            icon: Icon(
+              Icons.timer_outlined,
+              color: isDarkMode ? Colors.grey : Colors.grey[600],
+            ),
             label: 'Timer',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.task_alt, color: Color(0xFF6C63FF)),
-            icon: Icon(Icons.task_alt_outlined, color: Colors.grey),
+            selectedIcon: Icon(Icons.task_alt, color: const Color(0xFF6C63FF)),
+            icon: Icon(
+              Icons.task_alt_outlined,
+              color: isDarkMode ? Colors.grey : Colors.grey[600],
+            ),
             label: 'Tasks',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.settings, color: const Color(0xFF6C63FF)),
+            icon: Icon(
+              Icons.settings_outlined,
+              color: isDarkMode ? Colors.grey : Colors.grey[600],
+            ),
+            label: 'Settings',
           ),
         ],
       ),
@@ -67,6 +94,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     int minutes,
     int seconds,
     double progress,
+    bool isDarkMode,
   ) {
     return SafeArea(
       child: Padding(
@@ -83,12 +111,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 children: [
                   CustomPaint(
                     size: const Size(200, 200),
-                    painter: _CirclePainter(progress: progress),
+                    painter: _CirclePainter(
+                      progress: progress,
+                      isDarkMode: isDarkMode,
+                    ),
                   ),
                   Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.grey[800],
                       fontSize: 48,
                       fontWeight: FontWeight.w600,
                     ),
@@ -119,7 +150,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             const SizedBox(height: 30),
             Text(
               "Current Phase: ${timerState.phase == TomodoroPhase.focus ? "Focus" : "Break"}",
-              style: const TextStyle(color: Colors.grey, fontSize: 18),
+              style: TextStyle(
+                color: isDarkMode ? Colors.grey : Colors.grey[600],
+                fontSize: 18,
+              ),
             ),
           ],
         ),
@@ -144,6 +178,7 @@ class _TimerButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 6,
@@ -163,15 +198,16 @@ class _TimerButton extends StatelessWidget {
 
 class _CirclePainter extends CustomPainter {
   final double progress;
+  final bool isDarkMode;
 
-  _CirclePainter({required this.progress});
+  _CirclePainter({required this.progress, required this.isDarkMode});
 
   @override
   void paint(Canvas canvas, Size size) {
     final baseCircle =
         Paint()
           ..strokeWidth = 12
-          ..color = Colors.grey.shade800
+          ..color = isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300
           ..style = PaintingStyle.stroke;
 
     final progressCircle =
@@ -199,5 +235,5 @@ class _CirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CirclePainter oldDelegate) =>
-      oldDelegate.progress != progress;
+      oldDelegate.progress != progress || oldDelegate.isDarkMode != isDarkMode;
 }
