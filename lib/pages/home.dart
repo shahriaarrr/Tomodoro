@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
 import 'package:tomodoro/pages/tasks.dart';
 import 'package:tomodoro/pages/settings.dart';
-import 'dart:math';
 
 import 'package:tomodoro/providers/timer_provider.dart';
+import 'package:tomodoro/widgets/TimerButton.dart';
+import 'package:tomodoro/widgets/circlePainter.dart';
+import 'package:tomodoro/widgets/main_navigation_bar.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -73,41 +75,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     return Scaffold(
       appBar: AppBar(title: Text(pageTitles[currentPageIndex])),
       body: pages[currentPageIndex],
-      bottomNavigationBar: NavigationBar(
-        backgroundColor:
-            isDarkMode ? const Color(0xFF2A2A3E) : Colors.grey[100],
+      bottomNavigationBar: MainNavigationBar(
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
-        destinations: [
-          NavigationDestination(
-            selectedIcon: Icon(Icons.timer, color: const Color(0xFF6C63FF)),
-            icon: Icon(
-              Icons.timer_outlined,
-              color: isDarkMode ? Colors.grey : Colors.grey[600],
-            ),
-            label: 'Timer',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.task_alt, color: const Color(0xFF6C63FF)),
-            icon: Icon(
-              Icons.task_alt_outlined,
-              color: isDarkMode ? Colors.grey : Colors.grey[600],
-            ),
-            label: 'Tasks',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.settings, color: const Color(0xFF6C63FF)),
-            icon: Icon(
-              Icons.settings_outlined,
-              color: isDarkMode ? Colors.grey : Colors.grey[600],
-            ),
-            label: 'Settings',
-          ),
-        ],
+        isDarkMode: isDarkMode,
       ),
     );
   }
@@ -148,7 +123,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                       }
                       return CustomPaint(
                         size: const Size(200, 200),
-                        painter: _CirclePainter(
+                        painter: CirclePainter(
                           progress: progress,
                           isDarkMode: isDarkMode,
                         ),
@@ -170,7 +145,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _TimerButton(
+                TimerButton(
                   text: timerState.isRunning ? 'Pause' : 'Start',
                   color: const Color(0xFF6C63FF),
                   onPressed:
@@ -179,7 +154,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                           : timerController.start,
                 ),
                 const SizedBox(width: 20),
-                _TimerButton(
+                TimerButton(
                   text: 'Reset',
                   color: const Color(0xFFEF476F),
                   onPressed: timerController.reset,
@@ -199,80 +174,4 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
       ),
     );
   }
-}
-
-class _TimerButton extends StatelessWidget {
-  final String text;
-  final Color color;
-  final VoidCallback onPressed;
-
-  const _TimerButton({
-    required this.text,
-    required this.color,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 6,
-      ),
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-}
-
-class _CirclePainter extends CustomPainter {
-  final double progress;
-  final bool isDarkMode;
-
-  _CirclePainter({required this.progress, required this.isDarkMode});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final baseCircle =
-        Paint()
-          ..strokeWidth = 12
-          ..color = isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300
-          ..style = PaintingStyle.stroke;
-
-    final progressCircle =
-        Paint()
-          ..strokeWidth = 12
-          ..color = const Color(0xFF00A693)
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round;
-
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-
-    canvas.drawCircle(center, radius, baseCircle);
-
-    final angle = 2 * pi * progress;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      -angle,
-      false,
-      progressCircle,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_CirclePainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.isDarkMode != isDarkMode;
 }
