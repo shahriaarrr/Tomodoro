@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
 
@@ -19,6 +20,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       );
 
   Timer? _timer;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   int focusMinutes = 25;
   int breakMinutes = 5;
@@ -63,8 +65,10 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
     );
   }
 
-  void _switchPhase() {
+  void _switchPhase() async {
     _timer?.cancel();
+    await _audioPlayer.play(AssetSource('audios/ding.mp3'));
+
     final nextPhase =
         state.phase == TomodoroPhase.focus
             ? TomodoroPhase.breaks
