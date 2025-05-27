@@ -92,7 +92,7 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
               width: 240,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
+                  backgroundColor: const Color(0xFF6C63FF),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

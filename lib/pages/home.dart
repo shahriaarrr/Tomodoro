@@ -74,7 +74,25 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
 
     return Scaffold(
       appBar: AppBar(title: Text(pageTitles[currentPageIndex])),
-      body: pages[currentPageIndex],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(0.1, 0),
+            end: Offset.zero,
+          ).animate(animation);
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(position: offsetAnimation, child: child),
+          );
+        },
+        child: KeyedSubtree(
+          key: ValueKey(currentPageIndex),
+          child: pages[currentPageIndex],
+        ),
+      ),
       bottomNavigationBar: MainNavigationBar(
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
