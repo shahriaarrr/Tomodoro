@@ -7,15 +7,17 @@ class TaskTile extends StatelessWidget {
   final bool completed;
   final VoidCallback? onDone;
   final VoidCallback? onDelete;
+  final Widget? trailing;
 
   const TaskTile({
+    Key? key,
     required this.task,
     required this.color,
     this.completed = false,
     this.onDone,
     this.onDelete,
-    super.key,
-  });
+    this.trailing,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +45,17 @@ class TaskTile extends StatelessWidget {
                 icon: const Icon(Icons.check_circle, color: Colors.greenAccent),
                 onPressed: onDone,
               ),
+            if (completed && onDone != null)
+              IconButton(
+                icon: const Icon(Icons.cancel, color: Colors.redAccent),
+                onPressed: onDone,
+                tooltip: 'Mark as not done',
+              ),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
               onPressed: onDelete,
             ),
+            if (trailing != null) trailing!,
           ],
         ),
       ),

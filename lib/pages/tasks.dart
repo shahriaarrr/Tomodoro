@@ -99,6 +99,10 @@ class TasksPage extends ConsumerWidget {
                         task: task,
                         color: _priorityColor(task.priority),
                         completed: true,
+                        onDone:
+                            () => ref
+                                .read(taskyProvider.notifier)
+                                .uncompleteTask(task.taskyId),
                         onDelete:
                             () => ref
                                 .read(taskyProvider.notifier)

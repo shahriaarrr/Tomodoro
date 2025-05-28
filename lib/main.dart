@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tomodoro/models/tasky.dart';
 import 'package:tomodoro/pages/home.dart';
 import 'package:tomodoro/providers/theme_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(TaskyAdapter());
+  Hive.registerAdapter(TaskyPriorityAdapter());
+
+  await Tasky.openBox();
+
   runApp(ProviderScope(child: const MyApp()));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
