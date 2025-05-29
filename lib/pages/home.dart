@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
+import 'package:tomodoro/pages/about.dart';
 import 'package:tomodoro/pages/tasks.dart';
 import 'package:tomodoro/pages/settings.dart';
 
@@ -68,9 +69,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
       ),
       const TasksPage(),
       const SettingsPage(),
+      const AboutPage(),
     ];
 
-    final List<String> pageTitles = ["Tomodoro", "Tasks", "Settings"];
+    final List<String> pageTitles = ["Tomodoro", "Tasks", "Settings", "About"];
 
     return Scaffold(
       appBar: AppBar(title: Text(pageTitles[currentPageIndex])),

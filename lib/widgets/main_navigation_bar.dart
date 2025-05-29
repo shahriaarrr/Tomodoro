@@ -43,6 +43,14 @@ class MainNavigationBar extends StatelessWidget {
           ),
           label: 'Settings',
         ),
+        NavigationDestination(
+          selectedIcon: Icon(Icons.person, color: const Color(0xFF6C63FF)),
+          icon: Icon(
+            Icons.person_outline,
+            color: isDarkMode ? Colors.grey : Colors.grey[600],
+          ),
+          label: 'About',
+        ),
       ],
     );
   }
