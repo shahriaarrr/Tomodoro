@@ -1,0 +1,122 @@
+name: Build and Release Flutter App
+
+permissions:
+  contents: write
+  packages: write
+  
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  
+jobs:
+  build-and-attach:
+    name: Build APK & IPA and Attach to Release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Cache Dart SDK
+      - name: Cache Dart SDK
+        uses: actions/cache@v3
+        with:
+          path: ${{ runner.tool_cache }}/dart-sdk
+          key: ${{ runner.os }}-dart-3.7.2
+          restore-keys: |
+            ${{ runner.os }}-dart-
+
+      # Cache Flutter SDK
+      - name: Cache Flutter SDK
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ runner.tool_cache }}/flutter
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}-3.29.3
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}-
+            ${{ runner.os }}-flutter-
+
+      - name: Set up Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.7.2"
+          
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.3"
+          channel: "stable"
+          cache: true
+
+      # Cache Dart dependencies
+      - name: Cache Dart dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-dart-deps-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-dart-deps-
+
+      # Cache Flutter dependencies  
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-flutter-deps-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-deps-
+
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Update iOS bundle identifier
+        run: |
+          echo "Setting iOS bundle ID to ir.shahriaarrr.tomodoro"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier ir.shahriaarrr.tomodoro" ios/Runner/Info.plist
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = .*;/PRODUCT_BUNDLE_IDENTIFIER = ir.shahriaarrr.tomodoro;/g' ios/Runner.xcodeproj/project.pbxproj
+      
+      - name: Build iOS IPA (unsigned)
+        run: |
+          # Build iOS without code signing
+          flutter build ios --release --no-codesign
+          
+          # Create IPA manually from the .app bundle
+          mkdir -p build/ios/ipa
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r ../ipa/action.ipa Payload/
+          cd ../../..
+          
+          # Verify IPA was created
+          ls -la build/ios/ipa/
+          
+      - name: Build Android APK
+        run: |
+          flutter build apk --release
+          # Rename APK to custom name
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/action.apk
+        
+      - name: Verify build outputs
+        run: |
+          echo "Checking APK:"
+          ls -la build/app/outputs/flutter-apk/
+          echo "Checking IPA:"
+          ls -la build/ios/ipa/
+        
+      - name: Attach APK & IPA to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            build/app/outputs/flutter-apk/action.apk
+            build/ios/ipa/action.ipa
+            
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
