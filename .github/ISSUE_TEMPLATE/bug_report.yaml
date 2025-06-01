@@ -1,6 +1,6 @@
 name: 🐞 Bug Report
 description: Report a bug in the app
-title: "Bug :: <Bug Title Here>"
+title: "Bug :: Bug Title Here"
 labels: [bug]
 body:
   - type: markdown
