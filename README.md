@@ -20,8 +20,7 @@
 - ⏳ Customizable Pomodoro timer (work/break intervals)
 - 📝 Task management with categories
 - 🎨 Clean and modern UI
-- 🔔 Notifications for session transitions
-- 📊 Daily and weekly stats & productivity tracking
+- 🔔 Notifications for session transitions --> soon
 - 🌗 Light and dark mode support
 - 💾 Local data storage (no internet required)
 - 📱 Works on Android and iOS
