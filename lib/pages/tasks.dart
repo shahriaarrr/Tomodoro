@@ -9,14 +9,20 @@ import 'package:tomodoro/widgets/add_task_sheet.dart';
 class TasksPage extends ConsumerWidget {
   const TasksPage({super.key});
 
-  Color _priorityColor(TaskyPriority priority) {
+  Color _priorityColor(BuildContext context, TaskyPriority priority) {
+    // You can keep distinct colors for priorities, or
+    // tie them into your main theme if desired.
+    final theme = Theme.of(context);
     switch (priority) {
       case TaskyPriority.high:
+        // Use a richer red for high priority
         return Colors.redAccent;
       case TaskyPriority.medium:
-        return Colors.amber;
+        // Use theme.secondary (teal) for medium
+        return theme.colorScheme.secondary;
       case TaskyPriority.low:
-        return Colors.green;
+        // Use theme.primary (warm orange) for low
+        return theme.colorScheme.primary;
     }
   }
 
@@ -28,20 +34,26 @@ class TasksPage extends ConsumerWidget {
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    // Retrieve primary/secondary for button styling
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+    // Text styles based on theme
+    final headerTextStyle = theme.textTheme.headlineSmall?.copyWith(
+      fontWeight: FontWeight.bold,
+      color: isDark ? Colors.white : Colors.black,
+    );
+    final sectionTitleStyle = theme.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.bold,
+      color: isDark ? Colors.white : Colors.black,
+    );
+    final subtitleColor = isDark ? Colors.white70 : Colors.black54;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          'Today',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: theme.appBarTheme.titleTextStyle?.color,
-          ),
-        ),
+        title: Text('Today', style: headerTextStyle),
         centerTitle: false,
       ),
       body: Padding(
@@ -49,7 +61,7 @@ class TasksPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // Info cards row
             Row(
               children: [
                 InfoCard(title: "All Tasks", value: "${active.length}"),
@@ -58,23 +70,20 @@ class TasksPage extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Text(
-              "All Tasks",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-            ),
+
+            // Section title: All Tasks
+            Text("All Tasks", style: sectionTitleStyle),
             const SizedBox(height: 8),
-            // Active Tasks
+
+            // Active and Completed tasks list
             Expanded(
               child: ListView(
                 children: [
+                  // Active tasks
                   ...active.map(
                     (task) => TaskTile(
                       task: task,
-                      color: _priorityColor(task.priority),
+                      color: _priorityColor(context, task.priority),
                       onDone:
                           () => ref
                               .read(taskyProvider.notifier)
@@ -89,15 +98,16 @@ class TasksPage extends ConsumerWidget {
                     const SizedBox(height: 18),
                     Text(
                       "Completed",
-                      style: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.black54,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: subtitleColor,
                       ),
                     ),
+                    const SizedBox(height: 8),
                     ...completed.map(
                       (task) => TaskTile(
                         task: task,
-                        color: _priorityColor(task.priority),
+                        color: _priorityColor(context, task.priority),
                         completed: true,
                         onDone:
                             () => ref
@@ -113,23 +123,28 @@ class TasksPage extends ConsumerWidget {
                 ],
               ),
             ),
+
+            // Add New Task button
             const SizedBox(height: 12),
             Center(
               child: SizedBox(
                 width: 240,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6C63FF),
+                    backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  icon: const Icon(Icons.add),
-                  label: const Text(
+                  icon: Icon(Icons.add, color: Colors.white),
+                  label: Text(
                     "Add new task",
-                    style: TextStyle(fontSize: 16),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                   onPressed:
                       () => showModalBottomSheet(

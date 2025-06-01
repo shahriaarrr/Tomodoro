@@ -14,41 +14,46 @@ class MainNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve theme colors
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+
+    // Determine background color for the navigation bar
+    final backgroundColor =
+        isDarkMode
+            ? Theme.of(context).canvasColor
+            : Theme.of(context).cardColor;
+
     return NavigationBar(
-      backgroundColor: isDarkMode ? const Color(0xFF2A2A3E) : Colors.grey[100],
+      // Set the background based on current mode
+      backgroundColor: backgroundColor,
+
+      // Highlight the selected index
       selectedIndex: selectedIndex,
       onDestinationSelected: onDestinationSelected,
+
+      // Define each destination with themed icons
       destinations: [
         NavigationDestination(
-          selectedIcon: Icon(Icons.timer, color: const Color(0xFF6C63FF)),
-          icon: Icon(
-            Icons.timer_outlined,
-            color: isDarkMode ? Colors.grey : Colors.grey[600],
-          ),
+          // Selected icon uses primary (warm orange)
+          selectedIcon: Icon(Icons.timer, color: primaryColor),
+          // Unselected icon uses secondary (teal)
+          icon: Icon(Icons.timer_outlined, color: secondaryColor),
           label: 'Timer',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.task_alt, color: const Color(0xFF6C63FF)),
-          icon: Icon(
-            Icons.task_alt_outlined,
-            color: isDarkMode ? Colors.grey : Colors.grey[600],
-          ),
+          selectedIcon: Icon(Icons.task_alt, color: primaryColor),
+          icon: Icon(Icons.task_alt_outlined, color: secondaryColor),
           label: 'Tasks',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.settings, color: const Color(0xFF6C63FF)),
-          icon: Icon(
-            Icons.settings_outlined,
-            color: isDarkMode ? Colors.grey : Colors.grey[600],
-          ),
+          selectedIcon: Icon(Icons.settings, color: primaryColor),
+          icon: Icon(Icons.settings_outlined, color: secondaryColor),
           label: 'Settings',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.person, color: const Color(0xFF6C63FF)),
-          icon: Icon(
-            Icons.person_outline,
-            color: isDarkMode ? Colors.grey : Colors.grey[600],
-          ),
+          selectedIcon: Icon(Icons.person, color: primaryColor),
+          icon: Icon(Icons.person_outline, color: secondaryColor),
           label: 'About',
         ),
       ],

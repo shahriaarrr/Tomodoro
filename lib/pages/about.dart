@@ -24,7 +24,15 @@ class AboutPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardColor;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final subtitleColor = isDark ? Colors.white70 : Colors.black54;
+    final dividerColor = isDark ? Colors.grey[700] : Colors.grey[300];
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -33,16 +41,22 @@ class AboutPage extends ConsumerWidget {
               const SizedBox(height: 24),
               CircleAvatar(
                 radius: 54,
-                backgroundImage: AssetImage('assets/images/profile.jpg'),
+                backgroundImage: const AssetImage('assets/images/profile.jpg'),
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'shahriaarrr',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
-              const Text(
+              Text(
                 'Software Engineer',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: subtitleColor,
+                  fontSize: 16,
+                ),
               ),
               const SizedBox(height: 28),
               Padding(
@@ -50,16 +64,13 @@ class AboutPage extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.grey[850]
-                            : Colors.white,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.12),
                         blurRadius: 12,
-                        offset: Offset(0, 6),
+                        offset: const Offset(0, 6),
                       ),
                     ],
                   ),
@@ -68,43 +79,34 @@ class AboutPage extends ConsumerWidget {
                       Text(
                         'Hi! I\'m Shahriar, a computer engineering student passionate about programming and continuous learning.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.5,
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           height: 1.7,
-                          color:
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black87,
+                          color: textColor,
+                          fontSize: 16.5,
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Divider(height: 1, color: Colors.grey[300]),
+                      Divider(height: 1, color: dividerColor),
                       const SizedBox(height: 12),
                       Text(
                         'I enjoy building projects using Python, Go, and Dart, and have experience with frameworks like Django, FastAPI, and Flutter.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.5,
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           height: 1.7,
-                          color:
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black87,
+                          color: textColor,
+                          fontSize: 16.5,
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Divider(height: 1, color: Colors.grey[300]),
+                      Divider(height: 1, color: dividerColor),
                       const SizedBox(height: 12),
                       Text(
                         'On my YouTube channel, I share tutorials, coding experiences, and insights from my journey in tech.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.5,
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           height: 1.7,
-                          color:
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black87,
+                          color: textColor,
+                          fontSize: 16.5,
                         ),
                       ),
                     ],
@@ -117,7 +119,7 @@ class AboutPage extends ConsumerWidget {
                 height: 48,
                 child: ElevatedButton.icon(
                   onPressed: _launchURL,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.play_circle_fill,
                     color: Colors.white,
                     size: 28,
@@ -127,7 +129,7 @@ class AboutPage extends ConsumerWidget {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[600],
+                    backgroundColor: Colors.red[600], // keep original red
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),

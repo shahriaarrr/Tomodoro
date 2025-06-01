@@ -10,6 +10,12 @@ class InfoCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // Extract primary and secondary from theme
+    final primaryColor = theme.colorScheme.primary; // warm orange
+    final secondaryColor = theme.colorScheme.secondary; // teal
+    // Determine subtitle color based on brightness
+    final subtitleColor = isDark ? Colors.white70 : Colors.black54;
+
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(top: 8),
@@ -20,22 +26,18 @@ class InfoCard extends StatelessWidget {
         ),
         child: Column(
           children: [
+            // Display the numeric value in primaryColor
             Text(
               value,
               style: TextStyle(
                 fontSize: 22,
-                color: isDark ? Colors.white : Colors.black,
+                color: primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 13,
-                color: isDark ? Colors.white70 : Colors.black54,
-              ),
-            ),
+            // Display the title in a muted secondary/subtitle color
+            Text(title, style: TextStyle(fontSize: 13, color: subtitleColor)),
           ],
         ),
       ),

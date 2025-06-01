@@ -14,6 +14,20 @@ class SettingsPage extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final timerController = ref.read(TomodoroTimerProvider.notifier);
 
+    // Extract theme colors
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary; // warm orange
+    final secondaryColor = theme.colorScheme.secondary; // teal
+    final cardColor = theme.cardColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
+    final switchActiveThumb = primaryColor;
+    final switchActiveTrack = primaryColor.withOpacity(0.3);
+    final switchInactiveThumb =
+        isDarkMode ? Colors.grey[400]! : Colors.grey[600]!;
+    final switchInactiveTrack =
+        isDarkMode ? Colors.grey[700]! : Colors.grey[300]!;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -22,30 +36,34 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+
+              // Page title
               Text(
                 'Settings',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: isDarkMode ? Colors.white : Colors.grey[800],
+                  color: textColor,
                 ),
               ),
               const SizedBox(height: 40),
 
+              // Settings card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.grey[800] : Colors.grey[100],
+                  color: cardColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // App Theme row
                     Row(
                       children: [
                         Icon(
                           Icons.palette_outlined,
-                          color: const Color(0xFF6C63FF),
+                          color: primaryColor,
                           size: 24,
                         ),
                         const SizedBox(width: 12),
@@ -54,13 +72,14 @@ class SettingsPage extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: isDarkMode ? Colors.white : Colors.grey[800],
+                            color: textColor,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
 
+                    // Dark Mode toggle
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -73,10 +92,7 @@ class SettingsPage extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color:
-                                      isDarkMode
-                                          ? Colors.white
-                                          : Colors.grey[800],
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -84,10 +100,7 @@ class SettingsPage extends ConsumerWidget {
                                 'Toggle between light and dark theme',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color:
-                                      isDarkMode
-                                          ? Colors.grey[400]
-                                          : Colors.grey[600],
+                                  color: subtitleColor,
                                 ),
                               ),
                             ],
@@ -100,24 +113,21 @@ class SettingsPage extends ConsumerWidget {
                               value ? AppThemeMode.dark : AppThemeMode.light,
                             );
                           },
-                          activeColor: const Color(0xFF6C63FF),
-                          activeTrackColor: const Color(
-                            0xFF6C63FF,
-                          ).withOpacity(0.3),
-                          inactiveThumbColor:
-                              isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                          inactiveTrackColor:
-                              isDarkMode ? Colors.grey[700] : Colors.grey[300],
+                          activeColor: switchActiveThumb,
+                          activeTrackColor: switchActiveTrack,
+                          inactiveThumbColor: switchInactiveThumb,
+                          inactiveTrackColor: switchInactiveTrack,
                         ),
                       ],
                     ),
                     const SizedBox(height: 32),
 
+                    // Timer Durations row
                     Row(
                       children: [
                         Icon(
                           Icons.timer_outlined,
-                          color: const Color(0xFF6C63FF),
+                          color: primaryColor,
                           size: 24,
                         ),
                         const SizedBox(width: 12),
@@ -126,12 +136,14 @@ class SettingsPage extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: isDarkMode ? Colors.white : Colors.grey[800],
+                            color: textColor,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
+
+                    // Set custom durations button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -144,10 +156,7 @@ class SettingsPage extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color:
-                                      isDarkMode
-                                          ? Colors.white
-                                          : Colors.grey[800],
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -155,10 +164,7 @@ class SettingsPage extends ConsumerWidget {
                                 'Set custom durations for focus and break',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color:
-                                      isDarkMode
-                                          ? Colors.grey[400]
-                                          : Colors.grey[600],
+                                  color: subtitleColor,
                                 ),
                               ),
                             ],
@@ -168,6 +174,12 @@ class SettingsPage extends ConsumerWidget {
                           onPressed: () async {
                             await showModalBottomSheet(
                               context: context,
+                              backgroundColor: theme.scaffoldBackgroundColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(24),
+                                ),
+                              ),
                               builder:
                                   (context) => DurationPickerSheet(
                                     initialFocus: timerController.focusMinutes,
@@ -182,7 +194,7 @@ class SettingsPage extends ConsumerWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6C63FF),
+                            backgroundColor: primaryColor,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),

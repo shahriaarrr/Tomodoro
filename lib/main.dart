@@ -9,16 +9,21 @@ import 'package:tomodoro/providers/theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Hive database
   await Hive.initFlutter();
 
+  // Register Hive adapters
   Hive.registerAdapter(TaskyAdapter());
   Hive.registerAdapter(TaskyPriorityAdapter());
 
+  // Open local storage box
   await Tasky.openBox();
 
-  runApp(ProviderScope(child: const MyApp()));
-
+  // Lock orientation to portrait mode
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Run the app with Riverpod provider scope
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -26,6 +31,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch current theme mode from provider
     final themeMode = ref.watch(
       themeProvider.select(
         (theme) => ref.read(themeProvider.notifier).themeMode,
@@ -36,43 +42,122 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
 
+      // =======================
+      //        Light Theme
+      // =======================
       theme: ThemeData(
         brightness: Brightness.light,
-        appBarTheme: AppBarTheme(
+
+        // Main color: warm orange
+        primaryColor: const Color(0xFFD99E48),
+        colorScheme: ColorScheme.light(
+          primary: const Color(0xFFD99E48),
+          secondary: const Color(0xFF3D8B7D),
+        ),
+
+        // Main screen background color
+        scaffoldBackgroundColor: const Color(0xFFFCF3E3),
+
+        // Cards and containers
+        cardColor: const Color(0xFFFFF8E7),
+
+        // AppBar style
+        appBarTheme: const AppBarTheme(
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
+
+          // Icons color
+          iconTheme: IconThemeData(color: Color(0xFF3D8B7D)),
+
+          // Title text style
           titleTextStyle: TextStyle(
-            color: Colors.black,
+            color: Color(0xFF3D8B7D),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        scaffoldBackgroundColor: Colors.white,
-        cardColor: Colors.grey[100],
+
+        // Floating action button style
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFFD99E48),
+          foregroundColor: Colors.white,
+        ),
+
+        // Bottom navigation bar style
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFFFFF8E7),
+          selectedItemColor: Color(0xFFD99E48),
+          unselectedItemColor: Color(0xFF3D8B7D),
+        ),
+
+        // Default text styles
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black87),
+          bodyMedium: TextStyle(color: Colors.black87),
+        ),
       ),
 
+      // =======================
+      //        Dark Theme
+      // =======================
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        appBarTheme: AppBarTheme(
+
+        // Main color: warm orange
+        primaryColor: const Color(0xFFD99E48),
+        colorScheme: ColorScheme.dark(
+          primary: const Color(0xFFD99E48),
+          secondary: const Color(0xFF3D8B7D),
+        ),
+
+        // Main screen background color (dark teal)
+        scaffoldBackgroundColor: const Color(0xFF0E1E20),
+
+        // Cards and containers
+        cardColor: const Color(0xFF1C313A),
+
+        // Drawer and other surfaces
+        canvasColor: const Color(0xFF142B2F),
+
+        // AppBar style
+        appBarTheme: const AppBarTheme(
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
+
+          // Icons color
+          iconTheme: IconThemeData(color: Color(0xFFD99E48)),
+
+          // Title text style
           titleTextStyle: TextStyle(
-            color: Colors.white,
+            color: Color(0xFFD99E48),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        scaffoldBackgroundColor: Colors.grey[900],
-        cardColor: Colors.grey[800],
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
-        canvasColor: Colors.grey[850],
+
+        // Floating action button style
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFFD99E48),
+          foregroundColor: Colors.black87,
+        ),
+
+        // Bottom navigation bar style
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF1C313A),
+          selectedItemColor: Color(0xFFD99E48),
+          unselectedItemColor: Color(0xFF3D8B7D),
+        ),
+
+        // Default text styles
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white70),
+          bodyMedium: TextStyle(color: Colors.white70),
+        ),
       ),
 
+      // Dynamic theme switching
       themeMode: themeMode,
     );
   }

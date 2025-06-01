@@ -18,8 +18,8 @@ class DurationPickerSheet extends StatefulWidget {
 }
 
 class _DurationPickerSheetState extends State<DurationPickerSheet> {
-  int focusMinutes = 25;
-  int breakMinutes = 5;
+  late int focusMinutes;
+  late int breakMinutes;
 
   @override
   void initState() {
@@ -30,23 +30,46 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Use theme colors instead of fixed purple
+    final primaryColor = theme.colorScheme.primary; // warm orange
+    final secondaryColor = theme.colorScheme.secondary; // teal
+    final cardColor = theme.cardColor;
+    final textColor = isDark ? Colors.white : Colors.black87;
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(16),
+        color: theme.scaffoldBackgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            // Title
+            Text(
               'Set durations',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
             ),
             const SizedBox(height: 16),
+
+            // Focus and Break pickers
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // Focus column
                 Column(
                   children: [
-                    const Text('Focus'),
+                    Text(
+                      'Focus',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: textColor,
+                      ),
+                    ),
                     SizedBox(
                       height: 120,
                       width: 80,
@@ -54,16 +77,16 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                         scrollController: FixedExtentScrollController(
                           initialItem: focusMinutes - 1,
                         ),
-                        itemExtent: 60,
+                        itemExtent: 44,
                         selectionOverlay: Container(
                           alignment: Alignment.center,
-                          height: 44,
+                          height: 40,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            color: Colors.purple.withOpacity(0.10),
+                            color: primaryColor.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Colors.purple.withOpacity(0.2),
+                              color: primaryColor.withOpacity(0.3),
                             ),
                           ),
                         ),
@@ -78,18 +101,15 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                             child: Text(
                               '${i + 1} min',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight:
-                                    i + 1 == focusMinutes
+                                    (i + 1 == focusMinutes)
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                 color:
-                                    i + 1 == focusMinutes
-                                        ? Colors.purple
-                                        : Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black87,
+                                    (i + 1 == focusMinutes)
+                                        ? primaryColor
+                                        : textColor,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -99,9 +119,17 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                     ),
                   ],
                 ),
+
+                // Break column
                 Column(
                   children: [
-                    const Text('Break'),
+                    Text(
+                      'Break',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: textColor,
+                      ),
+                    ),
                     SizedBox(
                       height: 120,
                       width: 80,
@@ -109,16 +137,16 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                         scrollController: FixedExtentScrollController(
                           initialItem: breakMinutes - 1,
                         ),
-                        itemExtent: 60,
+                        itemExtent: 44,
                         selectionOverlay: Container(
                           alignment: Alignment.center,
-                          height: 44,
+                          height: 40,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            color: Colors.purple.withOpacity(0.10),
+                            color: primaryColor.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Colors.purple.withOpacity(0.2),
+                              color: primaryColor.withOpacity(0.3),
                             ),
                           ),
                         ),
@@ -133,18 +161,15 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                             child: Text(
                               '${i + 1} min',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight:
-                                    i + 1 == breakMinutes
+                                    (i + 1 == breakMinutes)
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                 color:
-                                    i + 1 == breakMinutes
-                                        ? Colors.purple
-                                        : Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black87,
+                                    (i + 1 == breakMinutes)
+                                        ? primaryColor
+                                        : textColor,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -156,10 +181,13 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                 ),
               ],
             ),
+
             const SizedBox(height: 16),
+
+            // Confirm button uses primaryColor
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 textStyle: const TextStyle(
                   fontSize: 18,

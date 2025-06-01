@@ -19,6 +19,12 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.colorScheme.primary; // warm orange
+    final secondaryColor = theme.colorScheme.secondary; // teal
+    final cardColor = theme.cardColor;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final hintColor = isDark ? Colors.white54 : Colors.black54;
+    final subtitleColor = isDark ? Colors.white70 : Colors.black54;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -31,25 +37,26 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Sheet title
           Text(
             "New Task",
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 18),
+
+          // Task name input field
           TextField(
             controller: _controller,
-            style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            style: TextStyle(color: textColor),
             decoration: InputDecoration(
               hintText: "Task name",
-              hintStyle: TextStyle(
-                color: isDark ? Colors.white54 : Colors.black54,
-              ),
+              hintStyle: TextStyle(color: hintColor),
               filled: true,
-              fillColor: theme.cardColor,
+              fillColor: cardColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -57,11 +64,12 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
             ),
           ),
           const SizedBox(height: 18),
-          Text(
-            "Task priority",
-            style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
-          ),
+
+          // Priority label
+          Text("Task priority", style: TextStyle(color: subtitleColor)),
           const SizedBox(height: 8),
+
+          // Priority selection chips
           Row(
             children: [
               PriorityChip(
@@ -74,25 +82,27 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
               PriorityChip(
                 label: "Medium",
                 selected: _priority == TaskyPriority.medium,
-                color: Colors.amber,
+                color: secondaryColor,
                 onTap: () => setState(() => _priority = TaskyPriority.medium),
               ),
               const SizedBox(width: 8),
               PriorityChip(
                 label: "Low",
                 selected: _priority == TaskyPriority.low,
-                color: Colors.green,
+                color: primaryColor,
                 onTap: () => setState(() => _priority = TaskyPriority.low),
               ),
             ],
           ),
           const SizedBox(height: 24),
+
+          // Add Task button
           Center(
             child: SizedBox(
               width: 240,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6C63FF),
+                  backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -106,7 +116,13 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
                       .addTask(_controller.text.trim(), _priority);
                   Navigator.pop(context);
                 },
-                child: const Text("Add Task", style: TextStyle(fontSize: 16)),
+                child: Text(
+                  "Add Task",
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ),

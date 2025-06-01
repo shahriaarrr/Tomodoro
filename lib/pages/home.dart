@@ -4,7 +4,6 @@ import 'package:tomodoro/models/timer.dart';
 import 'package:tomodoro/pages/about.dart';
 import 'package:tomodoro/pages/tasks.dart';
 import 'package:tomodoro/pages/settings.dart';
-
 import 'package:tomodoro/providers/timer_provider.dart';
 import 'package:tomodoro/widgets/TimerButton.dart';
 import 'package:tomodoro/widgets/circlePainter.dart';
@@ -25,13 +24,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   @override
   void initState() {
     super.initState();
+    // AnimationController drives the circular progress indicator
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(hours: 1),
     )..addListener(() {
-      setState(() {});
+      setState(() {}); // Rebuild on every tick
     });
-    _progressController.repeat();
+    _progressController.repeat(); // Loop indefinitely
   }
 
   @override
@@ -42,21 +42,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    // Read timer state and controller from Riverpod
     final timerState = ref.watch(TomodoroTimerProvider);
     final timerController = ref.read(TomodoroTimerProvider.notifier);
-
+    // Determine whether we are in dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    // Compute remaining minutes and seconds
     final minutes = timerState.remaining.inMinutes.remainder(60);
     final seconds = timerState.remaining.inSeconds.remainder(60);
 
+    // Determine total seconds based on focus or break phase
     final totalSeconds =
         timerState.phase == TomodoroPhase.focus
             ? timerController.focusMinutes * 60
             : timerController.breakMinutes * 60;
 
+    // Calculate end time for the countdown
     final DateTime endTime = DateTime.now().add(timerState.remaining);
 
+    // Define the pages to display in the body
     final List<Widget> pages = [
       _buildTimerPage(
         timerState,
@@ -72,6 +77,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
       const AboutPage(),
     ];
 
+    // Titles for each page in the AppBar
     final List<String> pageTitles = ["Tomodoro", "Tasks", "Settings", "About"];
 
     return Scaffold(
@@ -81,6 +87,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
+          // Slide + fade transition between pages
           final offsetAnimation = Tween<Offset>(
             begin: const Offset(0.1, 0),
             end: Offset.zero,
@@ -116,6 +123,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     DateTime endTime,
     bool isDarkMode,
   ) {
+    // Extract theme colors for convenience
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final textColor = isDarkMode ? Colors.white : Colors.grey[800];
+    final subtitleColor = isDarkMode ? Colors.grey[400] : Colors.grey[600];
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
@@ -129,6 +142,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  // Circular progress drawn by CustomPainter
                   AnimatedBuilder(
                     animation: _progressController,
                     builder: (context, child) {
@@ -150,10 +164,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                       );
                     },
                   ),
+                  // Remaining time text
                   Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                     style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.grey[800],
+                      color: textColor,
                       fontSize: 48,
                       fontWeight: FontWeight.w600,
                     ),
@@ -165,29 +180,29 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Start / Pause button uses primary color
                 TimerButton(
                   text: timerState.isRunning ? 'Pause' : 'Start',
-                  color: const Color(0xFF6C63FF),
+                  color: primaryColor,
                   onPressed:
                       timerState.isRunning
                           ? timerController.pause
                           : timerController.start,
                 ),
                 const SizedBox(width: 20),
+                // Reset button uses secondary color
                 TimerButton(
                   text: 'Reset',
-                  color: const Color(0xFFEF476F),
+                  color: secondaryColor,
                   onPressed: timerController.reset,
                 ),
               ],
             ),
             const SizedBox(height: 30),
+            // Display current phase (Focus / Break)
             Text(
               "Current Phase: ${timerState.phase == TomodoroPhase.focus ? "Focus" : "Break"}",
-              style: TextStyle(
-                color: isDarkMode ? Colors.grey : Colors.grey[600],
-                fontSize: 18,
-              ),
+              style: TextStyle(color: subtitleColor, fontSize: 18),
             ),
           ],
         ),
