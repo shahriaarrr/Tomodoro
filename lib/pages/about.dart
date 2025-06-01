@@ -6,9 +6,19 @@ class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   void _launchURL() async {
-    final url = Uri.parse('https://youtube.com/@shahriaarrr');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+    final channelId = 'UCP_y9q-smQQD4ri-nhLhTYw';
+    final youtubeAppUrl = Uri.parse(
+      'youtube://www.youtube.com/channel/$channelId',
+    );
+    final youtubeAppUrl2 = Uri.parse('vnd.youtube://channel/$channelId');
+    final youtubeWebUrl = Uri.parse('https://youtube.com/channel/$channelId');
+
+    if (await canLaunchUrl(youtubeAppUrl)) {
+      await launchUrl(youtubeAppUrl, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(youtubeAppUrl2)) {
+      await launchUrl(youtubeAppUrl2, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(youtubeWebUrl)) {
+      await launchUrl(youtubeWebUrl, mode: LaunchMode.externalApplication);
     }
   }
 
