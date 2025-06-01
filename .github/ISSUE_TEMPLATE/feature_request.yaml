@@ -1,0 +1,41 @@
+name: 💡 Feature Request
+description: Request a new feature or enhancement
+title: "Feature :: <Feature Title Here>"
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please fill out all sections carefully.**
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: '**Describe the feature you would like to see.**'
+      placeholder: |
+        **Example:**  
+        Add a dark mode option to improve usability at night.
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-code
+    attributes:
+      label: Sample Code (if any)
+      description: If you have any sample code or a code snippet for this feature, please provide it here.
+      placeholder: // Paste your sample code here
+    validations:
+      required: false
+
+  - type: textarea
+    id: feature-references
+    attributes:
+      label: References
+      description: Add any references (articles, documentation, repositories, etc.) that can help us understand or implement this feature.
+      placeholder: |
+        e.g.,  
+        - https://developer.android.com/guide/topics/ui/look-and-feel/darktheme  
+        - https://github.com/example/repo
+    validations:
+      required: false

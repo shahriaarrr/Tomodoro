@@ -1,0 +1,76 @@
+name: 🐞 Bug Report
+description: Report a bug in the app
+title: "Bug :: <Bug Title Here>"
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please fill out all sections carefully.**
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Problem Description
+      description: '**Describe the problem in detail.**'
+      placeholder: |
+        **Example:**  
+        The timer does not start after pressing the start button.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os-type
+    attributes:
+      label: Operating System
+      description: Select your device's operating system.
+      options:
+        - Android
+        - iOS
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Video or Screenshot
+      description: If possible, attach a video or screenshot showing the issue (you can upload a file or provide a link).
+      placeholder: Attach file or paste link here.
+    validations:
+      required: false
+
+  - type: textarea
+    id: code-snippet
+    attributes:
+      label: Related Code (optional)
+      description: If you know which part of the code is related to the issue, paste it here.
+      placeholder: // Paste the relevant code here
+    validations:
+      required: false
+
+  - type: input
+    id: os-version
+    attributes:
+      label: OS Version
+      description: Enter your device's operating system version.
+      placeholder: e.g., Android 13 or iOS 17.2
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App Version
+      description: Enter the version of the app you are using.
+      placeholder: e.g., 1.2.3
+    validations:
+      required: true
+
+  - type: input
+    id: app-source
+    attributes:
+      label: App Download Source
+      description: Where did you download the app from? (e.g., Google Play, App Store, official website, etc.)
+      placeholder: e.g., Google Play
+    validations:
+      required: true
