@@ -27,6 +27,7 @@ body:
       options:
         - Android
         - iOS
+        - Both (Android & iOS)
     validations:
       required: true
 
