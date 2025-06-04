@@ -15,6 +15,10 @@
 
 </div>
 
+## About Tomodoro
+
+Tomodoro is a modern Pomodoro timer and task management application built with Flutter, designed to help you boost productivity and manage your daily tasks efficiently. With its sleek and intuitive interface, Tomodoro makes it easy to organize your workflow, set focused work intervals, and schedule breaks based on the Pomodoro Technique. Whether you’re a student, professional, or anyone looking to optimize their time, Tomodoro provides a delightful and effective experience for staying on track and achieving your goals.
+
 ## ✨ Features
 
 - ⏳ Customizable Pomodoro timer (work/break intervals)
