@@ -97,16 +97,14 @@ jobs:
           # Verify IPA was created
           ls -la build/ios/ipa/
           
-      - name: Build Android APK
-        run: |
-          flutter build apk --release
-          # Rename APK to custom name
-          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/action.apk
+      # - name: Build Android APK
+      #   run: |
+      #     flutter build apk --release
+      #     # Rename APK to custom name
+      #     cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/action.apk
         
       - name: Verify build outputs
         run: |
-          echo "Checking APK:"
-          ls -la build/app/outputs/flutter-apk/
           echo "Checking IPA:"
           ls -la build/ios/ipa/
         
@@ -115,7 +113,6 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: |
-            build/app/outputs/flutter-apk/action.apk
             build/ios/ipa/action.ipa
             
         env:
