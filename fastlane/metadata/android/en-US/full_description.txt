@@ -1,0 +1,9 @@
+Tomodoro is a modern Pomodoro technique and task management app.
+This application helps you manage your daily tasks and boost productivity by setting customizable work and break intervals.
+
+Key features include:
+- Customizable Pomodoro timer (work and break durations)
+- Task management with categories
+- Simple and modern user interface
+- Light and dark mode support
+- Local storage (no internet required)

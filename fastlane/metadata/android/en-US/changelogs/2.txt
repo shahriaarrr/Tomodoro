@@ -1,0 +1,5 @@
+- Initial release of Tomodoro
+- Implemented customizable Pomodoro timer
+- Added task management with categories
+- Introduced light and dark mode support
+- Enabled local storage functionality
