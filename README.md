@@ -34,10 +34,10 @@ Tomodoro is a modern Pomodoro timer and task management application built with F
 <details>
 <summary><b>Download from Stores</b></summary>
 
-| Platform   | Google Play | App Store | F-Droid | GitHub Releases |
+| Platform   | Myket | Anardoni | F-Droid | GitHub Releases |
 |------------|:----------:|:---------:|:-------:|:---------------:|
-| Android    | [![Google Play](https://img.shields.io/badge/Google_Play-4285F4?logo=google-play&logoColor=white)](https://play.google.com/#) | - | [![F-Droid](https://img.shields.io/badge/F--Droid-1976D2?logo=f-droid&logoColor=white)](https://f-droid.org/#) | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
-| iOS        | - | [![App Store](https://img.shields.io/badge/App_Store-0D96F6?logo=app-store&logoColor=white)](https://apps.apple.com/#) | - | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
+| Android    | [<img src="./assets/download%20icons/myket.png" alt="Myket" width="120"/>](https://myket.ir/#) | - | [![F-Droid](https://img.shields.io/badge/F--Droid-1976D2?logo=f-droid&logoColor=white)](https://f-droid.org/#) | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
+| iOS        | - | [<img src="./assets/download%20icons/anardoni.png" alt="Anardoni" width="120"/>](https://anardoni.com/ios/app/irshahriaarrrtomodoro) | - | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
 
 </details>
 
