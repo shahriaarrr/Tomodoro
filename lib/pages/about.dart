@@ -22,6 +22,13 @@ class AboutPage extends ConsumerWidget {
     }
   }
 
+  void _launchDonationURL() async {
+    final donationUrl = Uri.parse('https://daramet.com/shahriaarrr');
+    if (await canLaunchUrl(donationUrl)) {
+      await launchUrl(donationUrl, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -117,27 +124,97 @@ class AboutPage extends ConsumerWidget {
               SizedBox(
                 width: 230,
                 height: 48,
-                child: ElevatedButton.icon(
-                  onPressed: _launchURL,
-                  icon: const Icon(
-                    Icons.play_circle_fill,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                  label: const Text(
-                    'My YouTube Channel',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[600], // keep original red
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.pink.shade600, Colors.orange.shade400],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    elevation: 2,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: _launchDonationURL,
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0, // shadow is handled by DecoratedBox
+                      backgroundColor: Colors.transparent, // <-- here
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    label: const Text(
+                      'Fuel the App! 🔋',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
+              const SizedBox(height: 28),
+
+              SizedBox(
+                width: 230,
+                height: 48,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.red.shade700, Colors.pink.shade400],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: _launchURL,
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0, // shadow handled by DecoratedBox
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.play_circle_fill,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    label: const Text(
+                      'My YouTube Channel',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 32),
             ],
           ),
