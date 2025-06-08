@@ -148,10 +148,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                     builder: (context, child) {
                       double progress = 0.0;
                       if (totalSeconds > 0) {
-                        final now = DateTime.now();
-                        final remaining =
-                            endTime.difference(now).inMilliseconds / 1000.0;
-                        progress = remaining / totalSeconds;
+                        final remainingSeconds = timerState.remaining.inSeconds;
+                        progress = remainingSeconds / totalSeconds;
                         if (progress < 0) progress = 0;
                         if (progress > 1) progress = 1;
                       }

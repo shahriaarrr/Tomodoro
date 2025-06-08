@@ -25,6 +25,9 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
   int focusMinutes = 25;
   int breakMinutes = 5;
 
+  DateTime? _startTime;
+  Duration _totalDuration = Duration.zero;
+
   void setDurations({required int focus, required int breaks}) {
     focusMinutes = focus;
     breakMinutes = breaks;
@@ -38,13 +41,14 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
 
   void start() {
     if (state.isRunning) return;
-
+    _startTime = DateTime.now();
+    _totalDuration = state.remaining;
     state = state.copyWith(isRunning: true);
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (state.remaining.inSeconds > 0) {
-        state = state.copyWith(
-          remaining: Duration(seconds: state.remaining.inSeconds - 1),
-        );
+      final elapsed = DateTime.now().difference(_startTime!);
+      final remaining = _totalDuration - elapsed;
+      if (remaining > Duration.zero) {
+        state = state.copyWith(remaining: remaining);
       } else {
         _switchPhase();
       }
@@ -53,11 +57,19 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
 
   void pause() {
     _timer?.cancel();
-    state = state.copyWith(isRunning: false);
+    if (_startTime != null) {
+      final elapsed = DateTime.now().difference(_startTime!);
+      state = state.copyWith(
+        isRunning: false,
+        remaining: _totalDuration - elapsed,
+      );
+    }
+    _startTime = null;
   }
 
   void reset() {
     _timer?.cancel();
+    _startTime = null;
     state = state.copyWith(
       remaining: _initialDuration(),
       isRunning: false,
