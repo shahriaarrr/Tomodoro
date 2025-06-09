@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tomodoro/models/timer.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 final TomodoroTimerProvider =
     StateNotifierProvider<TomodoroTimerController, TomodoroTimerState>(
@@ -44,6 +45,9 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
     _startTime = DateTime.now();
     _totalDuration = state.remaining;
     state = state.copyWith(isRunning: true);
+
+    WakelockPlus.enable();
+
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final elapsed = DateTime.now().difference(_startTime!);
       final remaining = _totalDuration - elapsed;
@@ -65,6 +69,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       );
     }
     _startTime = null;
+    WakelockPlus.disable();
   }
 
   void reset() {
@@ -75,6 +80,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       isRunning: false,
       phase: state.phase,
     );
+    WakelockPlus.disable();
   }
 
   void _switchPhase() async {
@@ -92,6 +98,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       isRunning: false,
       phase: nextPhase,
     );
+    WakelockPlus.disable();
   }
 
   Duration _initialDuration({TomodoroPhase? phase}) {
