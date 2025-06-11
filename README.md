@@ -31,15 +31,12 @@ Tomodoro is a modern Pomodoro timer and task management application built with F
 
 ## 📦 Installation
 
-<details>
-<summary><b>Download from Stores</b></summary>
+### Download from Stores
 
-| Platform   | Myket | Anardoni | F-Droid | GitHub Releases |
-|------------|:----------:|:---------:|:-------:|:---------------:|
-| Android    | [<img src="./assets/download%20icons/myket.png" alt="Myket" width="120"/>](https://myket.ir/#) | - | [![F-Droid](https://img.shields.io/badge/F--Droid-1976D2?logo=f-droid&logoColor=white)](https://f-droid.org/#) | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
-| iOS        | - | [<img src="./assets/download%20icons/anardoni.png" alt="Anardoni" width="120"/>](https://anardoni.com/ios/app/irshahriaarrrtomodoro) | - | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
-
-</details>
+| Platform   | Myket | Bazaar | Anardoni | F-Droid | GitHub Releases |
+|------------|:----------:|:-------:|:---------:|:-------:|:---------------:|
+| Android    | coming soon... | [<img src="./assets/download%20icons/bazaar.png" alt="Bazaar" width="120"/>](https://cafebazaar.ir/app/ir.shahriaarrr.tomodoro) | - | coming soon... | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
+| iOS        | - | - | [<img src="./assets/download%20icons/anardoni.png" alt="Anardoni" width="120"/>](https://anardoni.com/ios/app/irshahriaarrrtomodoro) | - | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
 
 <details>
 <summary><b>Build from Source</b></summary>
