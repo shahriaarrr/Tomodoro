@@ -29,6 +29,16 @@ Tomodoro is a modern Pomodoro timer and task management application built with F
 - 💾 Local data storage (no internet required)
 - 📱 Works on Android and iOS
 
+## 📱 Screenshots
+
+<div style="display: flex; overflow-x: auto; gap: 12px; padding: 8px 0;">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" alt="Screenshot 1" height="400"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" alt="Screenshot 2" height="400"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" alt="Screenshot 3" height="400"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" alt="Screenshot 4" height="400"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" alt="Screenshot 5" height="400"/>
+</div>
+
 ## 📦 Installation
 
 ### Download from Stores
