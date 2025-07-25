@@ -12,7 +12,7 @@ class SettingsPage extends ConsumerWidget {
     final currentTheme = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final timerController = ref.read(TomodoroTimerProvider.notifier);
+    final timerController = ref.read(tomodoroTimerProvider.notifier);
 
     // Extract theme colors
     final theme = Theme.of(context);
