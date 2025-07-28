@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tomodoro/live_notification/live_notification.dart';
 import 'package:tomodoro/models/timer.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -40,8 +43,29 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
     );
   }
 
-  void start() {
+  Future<bool> requestNotificationPermissionIfNotGranted() async {
+    final status = await Permission.notification.status;
+    if (!status.isGranted) {
+      final result = await Permission.notification.request();
+      if (result.isDenied || result.isPermanentlyDenied) {
+        debugPrint('Notification permission denied');
+        return false;
+      } else {
+        debugPrint('Notification permission granted');
+        return true;
+      }
+    } else {
+      debugPrint('Notification permission already granted');
+      return true;
+    }
+  }
+
+  Future<void> start() async {
     if (state.isRunning) return;
+    _timer?.cancel(); // Cancel any existing timer
+    // Check notification permission
+    final permissionGranted = await requestNotificationPermissionIfNotGranted();
+    //
     _startTime = DateTime.now();
     _totalDuration = state.remaining;
     state = state.copyWith(isRunning: true);
@@ -57,6 +81,17 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
         _switchPhase();
       }
     });
+
+    // show live notification
+    if (permissionGranted) {
+      final elapsed = DateTime.now().difference(_startTime!);
+      final remaining = _totalDuration - elapsed;
+      if (remaining > Duration.zero) {
+        LiveNotification().resumeTimer();
+      } else {
+        LiveNotification().startTimer(_totalDuration.inSeconds);
+      }
+    }
   }
 
   void pause() {
@@ -70,6 +105,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
     }
     _startTime = null;
     WakelockPlus.disable();
+    LiveNotification().pauseTimer();
   }
 
   void reset() {
@@ -81,10 +117,13 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       phase: state.phase,
     );
     WakelockPlus.disable();
+    LiveNotification().stopTimer();
   }
 
   void _switchPhase() async {
     _timer?.cancel();
+    //stop live notification
+    await LiveNotification().stopTimer();
     await _audioPlayer.play(AssetSource('audios/ding.mp3'));
 
     final nextPhase =
@@ -112,6 +151,7 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
   @override
   void dispose() {
     _timer?.cancel();
+    LiveNotification().stopTimer();
     super.dispose();
   }
 }

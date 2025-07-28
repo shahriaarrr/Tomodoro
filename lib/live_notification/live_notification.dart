@@ -6,21 +6,21 @@ class LiveNotification {
 
   factory LiveNotification() => _instance;
 
-  static const platform = MethodChannel('pomodoro/live_notification');
+  static const platform = MethodChannel('tomodoro/live_notification');
 
-  Future<void> startLiveNotification(int durationInSeconds) async {
-    await platform.invokeMethod('startLiveActivity', {
-      'duration': durationInSeconds,
-    });
+  Future<void> startTimer(int durationInSeconds) async {
+    await platform.invokeMethod('startTimer', {'duration': durationInSeconds});
   }
 
-  Future<void> updateLiveNotification(int remainingSeconds) async {
-    await platform.invokeMethod('updateLiveActivity', {
-      'remaining': remainingSeconds,
-    });
+  Future<void> pauseTimer() async {
+    await platform.invokeMethod('pauseTimer');
   }
 
-  Future<void> stopLiveNotification() async {
-    await platform.invokeMethod('stopLiveActivity');
+  Future<void> resumeTimer() async {
+    await platform.invokeMethod('resumeTimer');
+  }
+
+  Future<void> stopTimer() async {
+    await platform.invokeMethod('stopTimer');
   }
 }
