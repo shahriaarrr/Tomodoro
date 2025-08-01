@@ -17,46 +17,55 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin,WidgetsBindingObserver {
   int currentPageIndex = 0;
   late AnimationController _progressController;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // AnimationController drives the circular progress indicator
+
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(hours: 1),
-    )..addListener(() {
-      setState(() {}); // Rebuild on every tick
-    });
-    _progressController.repeat(); // Loop indefinitely
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final timerController = ref.read(tomodoroTimerProvider.notifier);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+        timerController.pause();
+    }
   }
 
   @override
   void dispose() {
     _progressController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // Read timer state and controller from Riverpod
-    final timerState = ref.watch(TomodoroTimerProvider);
-    final timerController = ref.read(TomodoroTimerProvider.notifier);
+    final timerState = ref.watch(tomodoroTimerProvider);
+    final timerController = ref.read(tomodoroTimerProvider.notifier);
     // Determine whether we are in dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     // Compute remaining minutes and seconds
     final minutes = timerState.remaining.inMinutes.remainder(60);
     final seconds = timerState.remaining.inSeconds.remainder(60);
+    timerController.loadTimerValue();
 
     // Determine total seconds based on focus or break phase
-    final totalSeconds =
-        timerState.phase == TomodoroPhase.focus
-            ? timerController.focusMinutes * 60
-            : timerController.breakMinutes * 60;
+    final totalSeconds = timerController.remainingSeconds ?? (timerState.phase == TomodoroPhase.focus
+        ? timerController.focusMinutes * 60
+        : timerController.breakMinutes * 60);
 
     // Calculate end time for the countdown
     final DateTime endTime = DateTime.now().add(timerState.remaining);
@@ -146,17 +155,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   AnimatedBuilder(
                     animation: _progressController,
                     builder: (context, child) {
-                      double progress = 0.0;
-                      if (totalSeconds > 0) {
-                        final remainingSeconds = timerState.remaining.inSeconds;
-                        progress = remainingSeconds / totalSeconds;
-                        if (progress < 0) progress = 0;
-                        if (progress > 1) progress = 1;
-                      }
+                      final progress = totalSeconds > 0
+                          ? timerState.remaining.inSeconds / totalSeconds
+                          : 0.0;
                       return CustomPaint(
                         size: const Size(200, 200),
                         painter: CirclePainter(
-                          progress: progress,
+                          progress: progress.clamp(0.0, 1.0),
                           isDarkMode: isDarkMode,
                         ),
                       );
