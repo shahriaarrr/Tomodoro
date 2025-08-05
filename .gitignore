@@ -11,6 +11,7 @@ local.properties
 
 # Log/OS Files
 *.log
+*.bat
 
 # Android Studio generated files and folders
 captures/
