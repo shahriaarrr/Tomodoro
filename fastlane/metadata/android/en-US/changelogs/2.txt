@@ -1,5 +1,4 @@
-- Initial release of Tomodoro
-- Implemented customizable Pomodoro timer
-- Added task management with categories
-- Introduced light and dark mode support
-- Enabled local storage functionality
+- Added wake screen functionality while using timer to prevent interruptions
+- Added timer storage in preferences
+- Implemented timer functionality to continue running when phone is in sleep mode
+- Added donate button in the about page to support the project development
