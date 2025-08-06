@@ -156,7 +156,7 @@ class AboutPage extends ConsumerWidget {
                       size: 28,
                     ),
                     label: const Text(
-                      'Fuel the App! 🔋',
+                      'Support the app 🪙',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
