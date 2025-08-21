@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tomodoro/core/data/cache/cache_provider.dart';
 
 enum AppThemeMode { system, light, dark }
 
 class ThemeNotifier extends StateNotifier<AppThemeMode> {
-  static const _themeKey = 'app_theme_mode';
+  final cache = CacheProvider();
 
   ThemeNotifier() : super(AppThemeMode.system) {
     _loadTheme();
   }
 
   Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeIndex = prefs.getInt(_themeKey);
-    if (themeIndex != null &&
-        themeIndex >= 0 &&
-        themeIndex < AppThemeMode.values.length) {
-      state = AppThemeMode.values[themeIndex];
+    final storedTheme = await cache.loadTheme();
+    if (storedTheme != null) {
+      state = storedTheme;
     }
   }
 
   Future<void> setTheme(AppThemeMode themeMode) async {
     state = themeMode;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_themeKey, themeMode.index);
+    await cache.saveTheme(themeMode);
   }
 
   ThemeMode get themeMode {

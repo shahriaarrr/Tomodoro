@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tomodoro/widgets/add_task_sheet.dart';
+import 'package:tomodoro/widgets/info_card.dart';
+import 'package:tomodoro/widgets/task_tile.dart';
 import 'package:tomodoro/models/tasky.dart';
 import 'package:tomodoro/providers/tasky_provider.dart';
-import 'package:tomodoro/widgets/task_tile.dart';
-import 'package:tomodoro/widgets/info_card.dart';
-import 'package:tomodoro/widgets/add_task_sheet.dart';
 
 class TasksPage extends ConsumerWidget {
   const TasksPage({super.key});

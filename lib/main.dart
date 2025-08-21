@@ -6,11 +6,15 @@ import 'package:tomodoro/models/tasky.dart';
 import 'package:tomodoro/pages/home.dart';
 import 'package:tomodoro/providers/theme_provider.dart';
 
+import 'core/data/cache/cache_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Hive database
   await Hive.initFlutter();
+
+  await CacheProvider().init();
 
   // Register Hive adapters
   Hive.registerAdapter(TaskyAdapter());
