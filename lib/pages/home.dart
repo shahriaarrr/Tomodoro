@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tomodoro/widgets/TimerButton.dart';
+import 'package:tomodoro/widgets/circlePainter.dart';
+import 'package:tomodoro/widgets/main_navigation_bar.dart';
 import 'package:tomodoro/models/timer.dart';
 import 'package:tomodoro/pages/about.dart';
 import 'package:tomodoro/pages/tasks.dart';
 import 'package:tomodoro/pages/settings.dart';
 import 'package:tomodoro/providers/timer_provider.dart';
-import 'package:tomodoro/widgets/TimerButton.dart';
-import 'package:tomodoro/widgets/circlePainter.dart';
-import 'package:tomodoro/widgets/main_navigation_bar.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -17,14 +17,13 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage>
-    with SingleTickerProviderStateMixin,WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin {
   int currentPageIndex = 0;
   late AnimationController _progressController;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     // AnimationController drives the circular progress indicator
 
     _progressController = AnimationController(
@@ -33,19 +32,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     );
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    final timerController = ref.read(tomodoroTimerProvider.notifier);
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached) {
-        timerController.pause();
-    }
-  }
 
   @override
   void dispose() {
     _progressController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -60,7 +50,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     // Compute remaining minutes and seconds
     final minutes = timerState.remaining.inMinutes.remainder(60);
     final seconds = timerState.remaining.inSeconds.remainder(60);
-    timerController.loadTimerValue();
 
     // Determine total seconds based on focus or break phase
     final totalSeconds = timerController.remainingSeconds ?? (timerState.phase == TomodoroPhase.focus

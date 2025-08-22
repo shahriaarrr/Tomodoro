@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tomodoro/widgets/duration_picker_sheet.dart';
 import 'package:tomodoro/providers/theme_provider.dart';
 import 'package:tomodoro/providers/timer_provider.dart';
-import 'package:tomodoro/widgets/duration_picker_sheet.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -22,7 +22,7 @@ class SettingsPage extends ConsumerWidget {
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
     final switchActiveThumb = primaryColor;
-    final switchActiveTrack = primaryColor.withOpacity(0.3);
+    final switchActiveTrack = primaryColor.withValues(alpha: 0.3);
     final switchInactiveThumb =
         isDarkMode ? Colors.grey[400]! : Colors.grey[600]!;
     final switchInactiveTrack =
@@ -113,7 +113,7 @@ class SettingsPage extends ConsumerWidget {
                               value ? AppThemeMode.dark : AppThemeMode.light,
                             );
                           },
-                          activeColor: switchActiveThumb,
+                          activeThumbColor: switchActiveThumb,
                           activeTrackColor: switchActiveTrack,
                           inactiveThumbColor: switchInactiveThumb,
                           inactiveTrackColor: switchInactiveTrack,

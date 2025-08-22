@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tomodoro/core/data/cache/cache_provider.dart';
 import 'package:tomodoro/models/timer.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -11,12 +11,11 @@ final tomodoroTimerProvider =
     );
 
 class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
-  static const _timerKey = "app-timer";
 
   TomodoroTimerController()
     : super(
         TomodoroTimerState(
-          remaining: const Duration(minutes: 25),
+          remaining: Duration(minutes: CacheProvider().getFocus),
           isRunning: false,
           phase: TomodoroPhase.focus,
         ),
@@ -26,16 +25,17 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
 
   Timer? _timer;
   final AudioPlayer _audioPlayer = AudioPlayer();
-  int focusMinutes = 25;
-  int breakMinutes = 5;
+  int focusMinutes = 0;
+  int breakMinutes = 0;
   int? remainingSeconds;
   DateTime? _startTime;
   Duration _totalDuration = Duration.zero;
 
-  void setDurations({required int focus, required int breaks}) {
+  void setDurations({required int focus, required int breaks}) async {
+    await CacheProvider().setFocus(focus);
+    await CacheProvider().setBreak(breaks);
     focusMinutes = focus;
     breakMinutes = breaks;
-    // Reset timer to new durations if needed
     state = state.copyWith(
       remaining: _initialDuration(),
       isRunning: false,
@@ -57,7 +57,6 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       if (remaining > Duration.zero) {
         state = state.copyWith(remaining: remaining);
       } else {
-        clearDuration();
         _switchPhase();
       }
     });
@@ -72,7 +71,6 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
         isRunning: false,
         remaining: newRemaining
       );
-      saveDuration(newRemaining);
     }
     _startTime = null;
     WakelockPlus.disable();
@@ -87,7 +85,6 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
       phase: state.phase,
     );
     WakelockPlus.disable();
-    clearDuration();
   }
 
   void _switchPhase() async {
@@ -116,39 +113,9 @@ class TomodoroTimerController extends StateNotifier<TomodoroTimerState> {
         : Duration(minutes: breakMinutes);
   }
 
-  Future<void> saveDuration(Duration duration) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_timerKey, duration.inMilliseconds);
-  }
-
-  Future<Duration?> loadDuration() async {
-    final prefs = await SharedPreferences.getInstance();
-    final ms = prefs.getInt(_timerKey);
-    if(ms != null) {
-      return Duration(milliseconds: ms);
-    }
-    return null;
-  }
-
-  Future<void> clearDuration() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_timerKey);
-    remainingSeconds = null;
-  }
-
   Future<void> _initializeTimer() async {
-    final loadedDuration = await loadDuration();
-
-    if(loadedDuration != null) {
-      state = state.copyWith(remaining: loadedDuration);
-    }
-  }
-
-  Future<void> loadTimerValue() async {
-    final loadedDuration = await loadDuration();
-    if(loadedDuration != null) {
-       remainingSeconds = loadedDuration.inSeconds;
-    }
+    focusMinutes = CacheProvider().getFocus;
+    breakMinutes = CacheProvider().getBreak;
   }
 
   @override

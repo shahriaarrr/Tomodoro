@@ -75,7 +75,7 @@ class AboutPage extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.12),
+                        color: Colors.grey.withValues(alpha: 0.12),
                         blurRadius: 12,
                         offset: const Offset(0, 6),
                       ),

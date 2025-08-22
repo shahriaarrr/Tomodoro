@@ -83,10 +83,10 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                           height: 40,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.15),
+                            color: primaryColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: primaryColor.withOpacity(0.3),
+                              color: primaryColor.withValues(alpha: 0.3),
                             ),
                           ),
                         ),
@@ -143,10 +143,10 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                           height: 40,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.15),
+                            color: primaryColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: primaryColor.withOpacity(0.3),
+                              color: primaryColor.withValues(alpha: 0.3),
                             ),
                           ),
                         ),
