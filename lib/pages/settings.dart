@@ -22,7 +22,7 @@ class SettingsPage extends ConsumerWidget {
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
     final switchActiveThumb = primaryColor;
-    final switchActiveTrack = primaryColor.withValues(alpha: 0.3);
+    final switchActiveTrack = primaryColor.withOpacity(0.3);
     final switchInactiveThumb =
         isDarkMode ? Colors.grey[400]! : Colors.grey[600]!;
     final switchInactiveTrack =
