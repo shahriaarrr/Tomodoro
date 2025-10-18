@@ -45,7 +45,7 @@ Tomodoro is a modern Pomodoro timer and task management application built with F
 
 | Platform   | Myket | Bazaar | Anardoni | F-Droid | GitHub Releases |
 |------------|:----------:|:-------:|:---------:|:-------:|:---------------:|
-| Android    | coming soon... | [<img src="./assets/download%20icons/bazaar.png" alt="Bazaar" width="120"/>](https://cafebazaar.ir/app/ir.shahriaarrr.tomodoro) | - | coming soon... | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
+| Android    | coming soon... | [<img src="./assets/download%20icons/bazaar.png" alt="Bazaar" width="120"/>](https://cafebazaar.ir/app/ir.shahriaarrr.tomodoro) | - | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="F-Droid" width="120"/>](https://f-droid.org/packages/ir.shahriaarrr.tomodoro/) | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
 | iOS        | - | - | [<img src="./assets/download%20icons/anardoni.png" alt="Anardoni" width="120"/>](https://anardoni.com/ios/app/irshahriaarrrtomodoro) | - | [![GitHub Release](https://img.shields.io/badge/GitHub-Release-24292F?logo=github&logoColor=white)](https://github.com/shahriaarrr/Tomodoro/releases) |
 
 <details>
